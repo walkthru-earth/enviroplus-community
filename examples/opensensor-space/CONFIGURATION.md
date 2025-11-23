@@ -5,10 +5,18 @@ Quick reference for all configuration variables in `config.env`.
 ## Station Configuration
 
 ```bash
-# Unique identifier for this sensor station (UUID v4 format)
-# Generate with: python3 -c "import uuid; print(uuid.uuid4())"
+# Unique identifier for this sensor station (UUID v7 format - time-ordered)
+# UUID v7 includes timestamp information, making it sortable and ideal for time-series data
+# Generate with: python3 -c "from uuid_utils import uuid7; print(uuid7())"
+# Or Python 3.12+: python3 -c "import uuid; print(uuid.uuid7())"
 STATION_ID=00000000-0000-0000-0000-000000000000
 ```
+
+**Why UUID v7?**
+- **Time-ordered**: UUIDs are sortable by creation time
+- **Database-friendly**: Better indexing performance than UUID v4
+- **Timestamp embedded**: First 48 bits contain Unix timestamp in milliseconds
+- **Future-proof**: Part of the new UUID standards (RFC 9562)
 
 ## Sensor Settings
 
@@ -191,6 +199,16 @@ AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 SYNC_ENABLED=true
 SYNC_INTERVAL_MINUTES=15
 ```
+
+## Generating Configuration
+
+You can use the installer to generate a complete configuration:
+
+```bash
+./install-opensensor-space.sh
+```
+
+Or manually create `config.env` from the template.
 
 ## Validation
 

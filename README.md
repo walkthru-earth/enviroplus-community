@@ -120,7 +120,7 @@ Collect sensor data efficiently with DuckDB-powered edge processing. **Complete 
 cd examples/opensensor-space
 
 # Run the smart installer (interactive setup)
-./install.sh
+./install-opensensor-space.sh
 ```
 
 The installer will:
@@ -138,7 +138,7 @@ Features:
 - **Snappy compression** - Optimized storage with ~60-90% size reduction
 - **Edge processing** - No cloud dependency, all processing happens on the Pi
 - **Lightweight rclone sync** - Optional automatic sync to S3, Backblaze B2, Google Cloud, etc.
-- **UUID-based station IDs** - Globally unique sensor station identification
+- **UUID v7 station IDs** - Time-ordered globally unique identifiers (better for databases)
 
 Data is stored locally in `output/station=UUID/year=YYYY/month=MM/day=DD/hour=HH/minute_bucket=MM/` with automatic Hive partitioning.
 

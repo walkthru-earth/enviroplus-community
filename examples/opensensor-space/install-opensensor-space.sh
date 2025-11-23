@@ -83,9 +83,23 @@ ask_input() {
     fi
 }
 
-# Generate UUID
+# Generate UUID v7 (time-ordered)
 generate_uuid() {
-    python3 -c "import uuid; print(str(uuid.uuid4()))"
+    python3 -c "
+try:
+    # Try uuid7 from Python 3.12+
+    import uuid
+    if hasattr(uuid, 'uuid7'):
+        print(str(uuid.uuid7()))
+    else:
+        # Fall back to uuid-utils library
+        from uuid_utils import uuid7
+        print(str(uuid7()))
+except ImportError:
+    # Final fallback to uuid4
+    import uuid
+    print(str(uuid.uuid4()))
+"
 }
 
 # Check if command exists
@@ -159,12 +173,13 @@ main() {
 
         # Station ID
         echo
-        print_info "Station ID must be a UUID (universally unique identifier)"
-        if ask_yes_no "Generate a new UUID automatically?" "y"; then
+        print_info "Station ID uses UUID v7 (time-ordered, universally unique identifier)"
+        print_info "UUID v7 includes timestamp information, making it sortable and ideal for time-series data"
+        if ask_yes_no "Generate a new UUID v7 automatically?" "y"; then
             STATION_ID=$(generate_uuid)
-            print_success "Generated UUID: $STATION_ID"
+            print_success "Generated UUID v7: $STATION_ID"
         else
-            STATION_ID=$(ask_input "Enter your station UUID")
+            STATION_ID=$(ask_input "Enter your station UUID v7")
         fi
 
         # Sensor configuration

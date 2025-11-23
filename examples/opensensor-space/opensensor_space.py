@@ -24,7 +24,7 @@ try:
         print(f"Loaded configuration from {config_file}")
     else:
         print(f"Warning: Configuration file not found: {config_file}")
-        print("Using default values. Run install.sh to create configuration.")
+        print("Using default values. Run install-opensensor-space.sh to create configuration.")
 except ImportError:
     print("Warning: python-dotenv not installed. Using default values.")
     script_dir = Path(__file__).parent

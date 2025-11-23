@@ -16,7 +16,7 @@ if [ -f "$CONFIG_FILE" ]; then
     source "$CONFIG_FILE"
 else
     echo "ERROR: Configuration file not found: $CONFIG_FILE"
-    echo "Please run install.sh first to create configuration."
+    echo "Please run install-opensensor-space.sh first to create configuration."
     exit 1
 fi
 
