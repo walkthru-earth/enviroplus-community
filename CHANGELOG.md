@@ -1,3 +1,9 @@
+1.0.3
+-----
+
+* **Maintainer update**: Set Youssef Harby as sole maintainer (displayed on PyPI)
+* Philip Howard remains original author
+
 1.0.2
 -----
 

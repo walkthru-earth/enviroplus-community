@@ -12,7 +12,6 @@ authors = [
     { name = "Philip Howard", email = "phil@pimoroni.com" },
 ]
 maintainers = [
-    { name = "Philip Howard", email = "phil@pimoroni.com" },
     { name = "Youssef Harby", email = "yharby@walkthru.earth" },
 ]
 keywords = [
