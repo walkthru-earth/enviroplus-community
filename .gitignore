@@ -23,3 +23,6 @@ library/debian/
 # UV virtual environment
 .venv/
 uv-requirements.lock
+examples/opensensor-space/config.env
+logs/
+output/
