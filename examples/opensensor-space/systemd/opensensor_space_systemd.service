@@ -5,21 +5,21 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=pi
-Group=pi
-WorkingDirectory=/home/pi/enviroplus-python
-Environment="PATH=/home/pi/enviroplus-python/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+User=REPLACE_USER
+Group=REPLACE_USER
+WorkingDirectory=REPLACE_PROJECT_ROOT
+Environment="PATH=REPLACE_PROJECT_ROOT/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 # Main data collection service
-ExecStart=/home/pi/enviroplus-python/.venv/bin/python examples/opensensor_space.py
+ExecStart=REPLACE_PROJECT_ROOT/.venv/bin/python examples/opensensor-space/opensensor_space.py
 
 # Restart policy
 Restart=always
 RestartSec=60
 
 # Logging
-StandardOutput=append:/home/pi/enviroplus-python/logs/opensensor_space.log
-StandardError=append:/home/pi/enviroplus-python/logs/opensensor_space_error.log
+StandardOutput=append:REPLACE_PROJECT_ROOT/logs/opensensor_space.log
+StandardError=append:REPLACE_PROJECT_ROOT/logs/opensensor_space_error.log
 
 # Security hardening (optional - uncomment if needed)
 # NoNewPrivileges=true

@@ -5,11 +5,11 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-User=pi
-Group=pi
-WorkingDirectory=/home/pi/enviroplus-python
-ExecStart=/home/pi/enviroplus-python/examples/sync_to_storage.sh
+User=REPLACE_USER
+Group=REPLACE_USER
+WorkingDirectory=REPLACE_PROJECT_ROOT
+ExecStart=REPLACE_PROJECT_ROOT/examples/opensensor-space/sync_to_storage.sh
 
 # Logging
-StandardOutput=append:/home/pi/enviroplus-python/logs/sync_service.log
-StandardError=append:/home/pi/enviroplus-python/logs/sync_service_error.log
+StandardOutput=append:REPLACE_PROJECT_ROOT/logs/sync_service.log
+StandardError=append:REPLACE_PROJECT_ROOT/logs/sync_service_error.log

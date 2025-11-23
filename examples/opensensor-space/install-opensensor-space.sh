@@ -310,17 +310,16 @@ EOF
         # Detect the current user (handle both sudo and non-sudo cases)
         CURRENT_USER="${SUDO_USER:-$USER}"
         print_info "Configuring services for user: $CURRENT_USER"
+        print_info "Project root: $PROJECT_ROOT"
 
         # Update paths and user in service files
-        sed -e "s|/home/pi/enviroplus-python|$PROJECT_ROOT|g" \
-            -e "s|User=pi|User=$CURRENT_USER|g" \
-            -e "s|Group=pi|Group=$CURRENT_USER|g" \
+        sed -e "s|REPLACE_PROJECT_ROOT|$PROJECT_ROOT|g" \
+            -e "s|REPLACE_USER|$CURRENT_USER|g" \
             "$SCRIPT_DIR/systemd/opensensor_space_systemd.service" | sudo tee /etc/systemd/system/opensensor-space.service > /dev/null
 
         if [ "$SYNC_ENABLED" = "true" ]; then
-            sed -e "s|/home/pi/enviroplus-python|$PROJECT_ROOT|g" \
-                -e "s|User=pi|User=$CURRENT_USER|g" \
-                -e "s|Group=pi|Group=$CURRENT_USER|g" \
+            sed -e "s|REPLACE_PROJECT_ROOT|$PROJECT_ROOT|g" \
+                -e "s|REPLACE_USER|$CURRENT_USER|g" \
                 "$SCRIPT_DIR/systemd/sync_timer.service" | sudo tee /etc/systemd/system/opensensor-sync.service > /dev/null
             sed "s|OnUnitActiveSec=.*|OnUnitActiveSec=${SYNC_INTERVAL}min|g" "$SCRIPT_DIR/systemd/sync_timer.timer" | sudo tee /etc/systemd/system/opensensor-sync.timer > /dev/null
         fi
