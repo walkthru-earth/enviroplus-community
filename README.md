@@ -1,159 +1,283 @@
-# Enviro+
+# Enviro+ Community Edition
 
-Designed for environmental monitoring, Enviro+ lets you measure air quality (pollutant gases and particulates), temperature, pressure, humidity, light, and noise level. Learn more - https://shop.pimoroni.com/products/enviro-plus
+![Enviro Plus pHAT](Enviro-Plus-pHAT.jpg)
+![Enviro Mini pHAT](Enviro-mini-pHAT.jpg)
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/pimoroni/enviroplus-python/test.yml?branch=main)](https://github.com/pimoroni/enviroplus-python/actions/workflows/test.yml)
-[![Coverage Status](https://coveralls.io/repos/github/pimoroni/enviroplus-python/badge.svg?branch=main)](https://coveralls.io/github/pimoroni/enviroplus-python?branch=main)
-[![PyPi Package](https://img.shields.io/pypi/v/enviroplus.svg)](https://pypi.python.org/pypi/enviroplus)
-[![Python Versions](https://img.shields.io/pypi/pyversions/enviroplus.svg)](https://pypi.python.org/pypi/enviroplus)
+**Environmental monitoring for Raspberry Pi** - Measure air quality (gases and particulates), temperature, pressure, humidity, light, and noise.
+
+[![Build Status](https://img.shields.io/github/actions/workflow/status/walkthru-earth/enviroplus-python/test.yml?branch=main)](https://github.com/walkthru-earth/enviroplus-python/actions/workflows/test.yml)
+[![PyPI](https://img.shields.io/pypi/v/enviroplus-community.svg)](https://pypi.org/project/enviroplus-community/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/enviroplus-community.svg)](https://pypi.org/project/enviroplus-community/)
 
 ---
 
 ## 🌍 Join the Open Sensor Network
 
-Want to contribute to open environmental data? Check out [**opensensor.space**](https://opensensor.space/) - a cloud-native platform for streaming sensor data directly to open datasets. Part of the [walkthru.earth](https://walkthru.earth/) initiative for people-first urban intelligence.
+**[opensensor.space](https://opensensor.space/)** is a cloud-native platform for streaming environmental sensor data to open datasets.
 
-**opensensor.space** demonstrates how IoT devices can participate in cloud-native architectures:
-- **Minimum carbon footprint** - Edge processing reduces data transmission by 60-90%
-- **Open data** - All sensor readings stored in Parquet format on [Source Cooperative](https://source.coop/)
-- **Near real-time dashboards** - Query sensor data directly in the browser with DuckDB
-- **Resilient** - Offline-first architecture with automatic sync
+Part of the [walkthru.earth](https://walkthru.earth/) initiative for people-first urban intelligence:
+- 🌱 **Minimum carbon footprint** - Edge processing reduces transmission by 60-90%
+- 📊 **Open data** - All readings stored in Parquet format on [Source Cooperative](https://source.coop/)
+- ⚡ **Near real-time** - Query sensor data in the browser with DuckDB
+- 🔄 **Resilient** - Offline-first with automatic sync
 
-See live environmental data from Enviro+ sensors at [opensensor.space](https://opensensor.space/)!
+[**See live data from Enviro+ sensors →**](https://opensensor.space/)
 
 ---
 
-# Installing
+## 🚀 Quick Start
 
-**Note** The code in this repository supports both the Enviro+ and Enviro Mini boards. _The Enviro Mini board does not have the Gas sensor or the breakout for the PM sensor._
-
-![Enviro Plus pHAT](https://raw.githubusercontent.com/pimoroni/enviroplus-python/main/Enviro-Plus-pHAT.jpg)
-![Enviro Mini pHAT](https://raw.githubusercontent.com/pimoroni/enviroplus-python/main/Enviro-mini-pHAT.jpg)
-
-:warning: This library now supports Python 3.9+ only. Python 2 is EOL - https://www.python.org/doc/sunset-python-2/
-
-## Quick Start (Debian Trixie/Bookworm)
-
-**Good news!** On modern Raspberry Pi OS (Debian Trixie/Bookworm as of late 2024), I2C, SPI, and serial interfaces work out of the box. Just install and run:
+### Installation
 
 ```bash
-git clone https://github.com/walkthru-earth/enviroplus-python.git
-cd enviroplus-python
-./install-uv.sh --with-examples
-uv run python examples/weather.py
-```
+# Install UV (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-That's it! No manual configuration needed on recent OS versions.
-
-## Installation Methods
-
-### Option 1: Modern Installation with UV (Recommended)
-
-[UV](https://docs.astral.sh/uv/) is an extremely fast Python package manager (10-100x faster than pip) written in Rust:
-
-```bash
-git clone https://github.com/walkthru-earth/enviroplus-python.git
-cd enviroplus-python
-./install-uv.sh --with-examples
-```
-
-**Run examples without activating environment:**
-
-```bash
-uv run python examples/weather.py
-uv run python examples/all-in-one.py
-```
-
-**Or activate the environment:**
-
-```bash
-source .venv/bin/activate
-python examples/weather.py
-```
-
-**Installation options:**
-- `--with-examples` - Install dependencies for example scripts
-- `--with-dev` - Install development tools (ruff, pdoc, etc.)
-- `--unstable` - Install from source instead of PyPI
-- `--skip-hardware` - Skip hardware configuration (useful for testing)
-
-See [UV_MIGRATION.md](UV_MIGRATION.md) for complete UV usage guide.
-
-### Option 2: Traditional Installation with pip
-
-```bash
-git clone https://github.com/walkthru-earth/enviroplus-python.git
-cd enviroplus-python
-./install.sh
-```
-
-**Note:** Libraries will be installed in the "pimoroni" virtual environment:
-
-```bash
-source ~/.virtualenvs/pimoroni/bin/activate
-python examples/weather.py
-```
-
-**Note:** Raspbian/Raspberry Pi OS Lite users may first need to install git: `sudo apt install git`
-
-## Manual Installation from PyPI
-
-For custom setups or containerized environments:
-
-```bash
-# Using UV (recommended)
+# Create isolated environment and install package
 uv venv
-uv pip install enviroplus
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install enviroplus-community
 
-# Or traditional pip
-python3 -m venv .venv
+# Check system requirements
+enviroplus-setup --check
+
+# Install system dependencies and configure hardware
+sudo enviroplus-setup --install
+
+# Reboot (required for hardware changes)
+sudo reboot
+```
+
+### Run Examples
+
+```bash
+# List all available examples
+enviroplus-examples
+
+# Get details about a specific example
+enviroplus-examples --info weather.py
+
+# Copy examples to your project
+enviroplus-examples --copy ~/my-sensors/
+
+# Run an example
+uv run python -m enviroplus.examples.weather
+
+# Or run directly (if venv is activated)
+python -m enviroplus.examples.weather
+```
+
+### Quick Test
+
+```python
+import time
+from pimoroni_bme280 import BME280
+
+try:
+    from smbus2 import SMBus
+except ImportError:
+    from smbus import SMBus
+
+bme280 = BME280(i2c_dev=SMBus(1))
+
+while True:
+    temperature = bme280.get_temperature()
+    pressure = bme280.get_pressure()
+    humidity = bme280.get_humidity()
+
+    print(f"Temperature: {temperature:.1f}°C")
+    print(f"Pressure: {pressure:.1f}hPa")
+    print(f"Humidity: {humidity:.1f}%")
+    print("---")
+
+    time.sleep(2)
+```
+
+---
+
+## 📦 What's Included
+
+### Hardware Support
+- **BME280** - Temperature, pressure, humidity
+- **LTR559** - Light and proximity
+- **MICS6814** - Gas sensor (oxidising, reducing, NH3)
+- **PMS5003** - Particulate matter (PM1, PM2.5, PM10)
+- **ADAU7002** - MEMS microphone for noise measurement
+- **ST7735** - 0.96" color LCD display (160x80)
+
+### Python Package
+- Core sensor libraries
+- 17 example scripts
+- Hardware setup tool (`enviroplus-setup`)
+- Examples helper (`enviroplus-examples`)
+- Full documentation
+
+### Example Scripts
+
+**Basic Sensors:**
+- `weather.py` - Temperature, pressure, humidity
+- `light.py` - Light sensor readings
+- `gas.py` - Gas sensor readings
+- `particulates.py` - Particulate matter readings
+- `compensated-temperature.py` - CPU-compensated temperature
+
+**Advanced:**
+- `all-in-one.py` - Full dashboard with all sensors
+- `mqtt-all.py` - Publish to MQTT broker
+- `sensorcommunity.py` - Upload to Sensor.Community network
+- `noise-profile.py` - Noise measurement with frequency analysis
+
+[**See all examples →**](https://github.com/walkthru-earth/enviroplus-python/tree/main/enviroplus/examples)
+
+---
+
+## 🛠️ Hardware Setup
+
+The `enviroplus-setup` tool automatically configures your Raspberry Pi:
+
+```bash
+# Check what's needed
+enviroplus-setup --check
+
+# Install and configure everything
+sudo enviroplus-setup --install
+```
+
+**What it does:**
+- ✅ Installs system packages (`python3-cffi`, `libportaudio2`)
+- ✅ Enables I2C interface (for sensors)
+- ✅ Enables SPI interface (for LCD display)
+- ✅ Configures serial/UART (for PMS5003 sensor)
+- ✅ Adds device tree overlays to `/boot/firmware/config.txt`
+- ✅ Creates backup before changes
+
+**Note:** A reboot is required after hardware configuration.
+
+---
+
+## 📖 Documentation
+
+- **Installation Guide:** See above
+- **Example Scripts:** [enviroplus/examples/](enviroplus/examples/)
+- **API Reference:** Use `enviroplus-examples --info <script>` for details
+- **Hardware Setup:** Run `enviroplus-setup --help`
+- **Publishing Guide:** [PYPI_PUBLISHING.md](PYPI_PUBLISHING.md)
+- **Development:** [DEVELOPMENT.md](DEVELOPMENT.md)
+
+---
+
+## 🤝 Community Projects & Integrations
+
+Amazing projects built by the community using Enviro+:
+
+### Cloud & IoT Platforms
+- **[opensensor.space](https://opensensor.space/)** - Cloud-native open sensor network with edge processing and open data (walkthru.earth)
+- **[enviroplus_exporter](https://github.com/tijmenvandenbrink/enviroplus_exporter)** - Prometheus exporter with Luftdaten and InfluxDB Cloud support
+- **[mqtt-all](https://github.com/robmarkcole/rpi-enviro-mqtt)** - MQTT integration (now upstream in [examples/mqtt-all.py](enviroplus/examples/mqtt-all.py))
+- **[sensorcommunity](https://sensor.community/)** - Upload data to Sensor.Community (Luftdaten) network
+
+### Web Dashboards
+- **[Enviro Plus Dashboard](https://gitlab.com/dedSyn4ps3/enviroplus-dashboard)** - React-based web dashboard for viewing sensor data
+- **[Enviro Plus Web](https://gitlab.com/idotj/enviroplusweb)** - Flask application serving web pages with current readings and graphs
+- **[enviro monitor](https://github.com/roscoe81/enviro-monitor)** - Comprehensive environmental monitoring solution
+
+### Home Automation
+- **[homekit-enviroplus](https://github.com/sighmon/homekit-enviroplus)** - Apple HomeKit accessory for Enviro+
+- **[homebridge-enviroplus](https://github.com/mhawkshaw/homebridge-enviroplus)** - Homebridge plugin for HomeKit integration
+
+### Development Libraries
+- **[go-enviroplus](https://github.com/rubiojr/go-enviroplus)** - Go modules to read Enviro+ sensors
+- **[Enviro+ Example Projects](https://gitlab.com/dedSyn4ps3/enviroplus-python-projects)** - Includes original examples plus code to stream to Adafruit IO
+
+**Got a project?** [Add it here →](https://github.com/walkthru-earth/enviroplus-python/issues)
+
+---
+
+## 🆘 Help & Support
+
+Need help getting started or troubleshooting?
+
+### Documentation
+- **Installation Guide:** See Quick Start above
+- **Hardware Setup:** Run `enviroplus-setup --help`
+- **Examples:** Run `enviroplus-examples` to see all available examples
+- **API Reference:** Run `enviroplus-examples --info <script>` for details
+- **GPIO Pinout:** [pinout.xyz/enviro_plus](https://pinout.xyz/pinout/enviro_plus)
+
+### Get Help
+- **GitHub Issues:** [Report bugs or request features](https://github.com/walkthru-earth/enviroplus-python/issues)
+- **GitHub Discussions:** [Ask questions and share ideas](https://github.com/walkthru-earth/enviroplus-python/discussions)
+- **Pimoroni Forums:** [Community support](https://forums.pimoroni.com/c/support)
+- **Discord:** [Join the conversation](https://discord.gg/hr93ByC)
+- **Email:** yharby@walkthru.earth (for opensensor.space integration)
+
+### Useful Links
+- **Enviro+ Product:** [shop.pimoroni.com/products/enviro-plus](https://shop.pimoroni.com/products/enviro-plus)
+- **Getting Started Guide:** [learn.pimoroni.com/enviro-plus](https://learn.pimoroni.com/article/getting-started-with-enviro-plus)
+- **opensensor.space:** [opensensor.space](https://opensensor.space/)
+- **walkthru.earth:** [walkthru.earth](https://walkthru.earth/)
+
+---
+
+## 🔧 Development
+
+Want to contribute? See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed setup instructions.
+
+```bash
+# Clone repository
+git clone https://github.com/walkthru-earth/enviroplus-python.git
+cd enviroplus-python
+
+# Create isolated environment
+uv venv
 source .venv/bin/activate
-pip install enviroplus
+
+# Install for development
+uv pip install -e .
+
+# Install dev dependencies
+make dev-deps
+
+# Run tests
+make pytest
+
+# Run QA checks
+make qa
+
+# Build package
+make build
 ```
 
-### Hardware Configuration (Older OS Versions Only)
+---
 
-**Debian Trixie/Bookworm (2024+):** Hardware interfaces work by default - no configuration needed!
+## 📋 Requirements
 
-**Older versions (Bullseye and earlier):** You may need to manually enable interfaces:
+- **Hardware:** Raspberry Pi with Enviro+ or Enviro Mini pHAT
+- **OS:** Raspberry Pi OS (Debian Bookworm or later recommended)
+- **Python:** 3.9+
+- **System packages:** Automatically installed by `enviroplus-setup`
 
-**Enable I2C and SPI:**
-```bash
-sudo raspi-config nonint do_i2c 0
-sudo raspi-config nonint do_spi 0
-```
+**Supported boards:**
+- Enviro+ (all sensors)
+- Enviro Mini (no gas sensor or PM sensor)
 
-**For PMS5003 Particulate Sensor (Bookworm):**
-```bash
-sudo raspi-config nonint do_serial_hw 0
-sudo raspi-config nonint do_serial_cons 1
-echo "dtoverlay=pi3-miniuart-bt" | sudo tee -a /boot/firmware/config.txt
-```
+---
 
-**For PMS5003 Particulate Sensor (Bullseye):**
-```bash
-sudo raspi-config nonint set_config_var enable_uart 1 /boot/config.txt
-sudo raspi-config nonint do_serial 1
-echo "dtoverlay=pi3-miniuart-bt" | sudo tee -a /boot/config.txt
-```
+## 📜 License
 
-After configuration changes, reboot your Pi.
+MIT License - see [LICENSE](LICENSE)
 
-## Community Projects & Integrations
+**Original Author:** Philip Howard (Pimoroni)
+**Maintained by:** Youssef Harby ([walkthru.earth](https://walkthru.earth/))
 
-* **opensensor.space** - https://opensensor.space/ - Cloud-native open sensor network streaming environmental data to open datasets in Parquet format. Part of the [walkthru.earth](https://walkthru.earth/) initiative
-* Enviro Plus Dashboard - https://gitlab.com/dedSyn4ps3/enviroplus-dashboard - React-based web dashboard for viewing sensor data
-* Enviro+ Example Projects - https://gitlab.com/dedSyn4ps3/enviroplus-python-projects - Includes original examples plus code to stream to Adafruit IO
-* enviro monitor - https://github.com/roscoe81/enviro-monitor - Environmental monitoring solution
-* mqtt-all - https://github.com/robmarkcole/rpi-enviro-mqtt - MQTT integration (now upstream: [examples/mqtt-all.py](examples/mqtt-all.py))
-* enviroplus_exporter - https://github.com/tijmenvandenbrink/enviroplus_exporter - Prometheus exporter with Luftdaten and InfluxDB Cloud support
-* homekit-enviroplus - https://github.com/sighmon/homekit-enviroplus - Apple HomeKit accessory for Enviro+
-* go-enviroplus - https://github.com/rubiojr/go-enviroplus - Go modules to read Enviro+ sensors
-* homebridge-enviroplus - https://github.com/mhawkshaw/homebridge-enviroplus - Homebridge plugin for HomeKit integration
-* Enviro Plus Web - https://gitlab.com/idotj/enviroplusweb - Flask application serving web page with current readings and graphs
+---
 
-## Help & Support
+## 🙏 Acknowledgments
 
-* GPIO Pinout - https://pinout.xyz/pinout/enviro_plus
-* Support forums - https://forums.pimoroni.com/c/support
-* Discord - https://discord.gg/hr93ByC
+- **Pimoroni** for creating the Enviro+ hardware and original library
+- **walkthru.earth** for opensensor.space integration
+- **Community contributors** for examples and integrations
+
+---
+
+**Made with ❤️ for open environmental data**

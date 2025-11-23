@@ -3,9 +3,9 @@ requires = ["hatchling", "hatch-fancy-pypi-readme"]
 build-backend = "hatchling.build"
 
 [project]
-name = "enviroplus"
+name = "enviroplus-community"
 dynamic = ["version", "readme"]
-description = "Enviro pHAT Plus environmental monitoring add-on for Raspberry Pi"
+description = "Community edition of Enviro pHAT Plus environmental monitoring for Raspberry Pi with opensensor.space integration"
 license = {file = "LICENSE"}
 requires-python = ">= 3.9"
 authors = [
@@ -13,10 +13,18 @@ authors = [
 ]
 maintainers = [
     { name = "Philip Howard", email = "phil@pimoroni.com" },
+    { name = "Youssef Harby", email = "yharby@walkthru.earth" },
 ]
 keywords = [
     "Pi",
     "Raspberry",
+    "enviroplus",
+    "environmental",
+    "monitoring",
+    "sensors",
+    "opensensor",
+    "air-quality",
+    "iot"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -57,19 +65,32 @@ examples = [
 ]
 
 [project.urls]
-GitHub = "https://www.github.com/pimoroni/enviroplus-python"
-Homepage = "https://www.pimoroni.com"
+GitHub = "https://github.com/walkthru-earth/enviroplus-python"
+Homepage = "https://opensensor.space"
+Documentation = "https://github.com/walkthru-earth/enviroplus-python"
+"Bug Tracker" = "https://github.com/walkthru-earth/enviroplus-python/issues"
+"Source Code" = "https://github.com/walkthru-earth/enviroplus-python"
+
+[project.scripts]
+# Console scripts for easy access after pip install
+enviroplus-setup = "enviroplus.setup_tool:main"
+enviroplus-examples = "enviroplus.examples_helper:main"
 
 [tool.hatch.version]
 path = "enviroplus/__init__.py"
 
 [tool.hatch.build]
 include = [
-    "enviroplus",
+    "enviroplus/**/*.py",
+    "enviroplus/examples/**/*.py",
+    "enviroplus/examples/**/*.png",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["enviroplus"]
 
 [tool.hatch.build.targets.sdist]
 include = [
@@ -120,14 +141,20 @@ ignore = [
     '.stickler.yml',
     'boilerplate.md',
     'check.sh',
-    'install.sh',
-    'uninstall.sh',
     'Makefile',
     'tox.ini',
     'tests/*',
-    'examples/*',
     '.coveragerc',
-    'requirements-dev.txt'
+    'requirements-dev.txt',
+    'requirements-examples.txt',
+    'uv.lock',
+    'uv-requirements.lock',
+    'UV_MIGRATION.md',
+    'DEVELOPMENT.md',
+    'PYPI_PUBLISHING.md',
+    'Enviro-*.jpg',
+    '*.jpg',
+    '*.png'
 ]
 
 [dependency-groups]
