@@ -235,12 +235,12 @@ def main():
                 batch_df = pd.DataFrame(batch_data)
 
                 # Use DuckDB's COPY with PARTITION_BY for efficient partitioned writes
-                # Partition by hour, include minute in filename
-                # This creates: station=X/year=Y/month=M/day=D/hour=H/data_HHMM.parquet
+                # Partition by day, include hour/minute in filename
+                # This creates: station=X/year=Y/month=M/day=D/data_HHMM.parquet
 
                 # Calculate the filename based on the minute bucket
                 minute_bucket = 15 * (int(minute) // 15)  # 0, 15, 30, or 45
-                filename = f"data_{hour}{minute_bucket:02d}.parquet"
+                filename = f"data_{hour}{minute_bucket:02d}"  # DuckDB adds .parquet automatically
 
                 partition_query = f"""
                     COPY (
@@ -267,12 +267,11 @@ def main():
                             '{STATION_ID}' AS station,
                             year(timestamp::TIMESTAMP) AS year,
                             month(timestamp::TIMESTAMP) AS month,
-                            day(timestamp::TIMESTAMP) AS day,
-                            hour(timestamp::TIMESTAMP) AS hour
+                            day(timestamp::TIMESTAMP) AS day
                         FROM batch_df
                     ) TO '{str(output_base)}' (
                         FORMAT PARQUET,
-                        PARTITION_BY (station, year, month, day, hour),
+                        PARTITION_BY (station, year, month, day),
                         OVERWRITE_OR_IGNORE,
                         FILENAME_PATTERN '{filename}',
                         COMPRESSION 'snappy'
@@ -282,8 +281,8 @@ def main():
                 con.execute(partition_query)
 
                 records_written = len(batch_data)
-                partition_path = f"station={STATION_ID}/year={year}/month={month}/day={day}/hour={hour}"
-                print(f"Wrote {records_written} records to {output_base}/{partition_path}/{filename}")
+                partition_path = f"station={STATION_ID}/year={year}/month={month}/day={day}"
+                print(f"Wrote {records_written} records to {output_base}/{partition_path}/{filename}.parquet")
 
                 # Close the connection
                 con.close()

@@ -240,34 +240,47 @@ output/
     └── year=2025/
         └── month=01/
             └── day=23/
-                └── hour=14/
-                    ├── data_1400.parquet  (14:00-14:14)
-                    ├── data_1415.parquet  (14:15-14:29)
-                    ├── data_1430.parquet  (14:30-14:44)
-                    └── data_1445.parquet  (14:45-14:59)
+                ├── data_0000.parquet  (00:00-00:14)
+                ├── data_0015.parquet  (00:15-00:29)
+                ├── data_0030.parquet  (00:30-00:44)
+                ├── data_0045.parquet  (00:45-00:59)
+                ├── data_0100.parquet  (01:00-01:14)
+                ...
+                ├── data_1400.parquet  (14:00-14:14)
+                ├── data_1415.parquet  (14:15-14:29)
+                ├── data_1430.parquet  (14:30-14:44)
+                ├── data_1445.parquet  (14:45-14:59)
+                ...
+                └── data_2345.parquet  (23:45-23:59)
 ```
 
 ### Partition Structure
 
 - **station**: Your unique UUID v7
-- **year/month/day/hour**: Timestamp components (Hive partitioning)
+- **year/month/day**: Timestamp components (Hive partitioning)
 - **filename**: `data_HHMM.parquet` where HHMM indicates the 15-minute interval (00, 15, 30, 45)
+
+All 96 files for a day (24 hours × 4 intervals) are stored in the same directory, making it easy to query full days.
 
 This structure enables efficient querying:
 
 ```python
 import duckdb
 
-# Query specific time range (partition pushdown is automatic)
+# Query specific day (all 96 files automatically included)
 duckdb.sql("""
     SELECT * FROM 'output/**/*.parquet'
     WHERE year = 2025 AND month = 1 AND day = 23
-    AND hour = 14
 """).show()
 
 # Query specific 15-minute interval using filename pattern
 duckdb.sql("""
-    SELECT * FROM 'output/**/hour=14/data_1415.parquet'
+    SELECT * FROM 'output/**/day=23/data_1415.parquet'
+""").show()
+
+# Query specific hour (all 4 intervals)
+duckdb.sql("""
+    SELECT * FROM 'output/**/day=23/data_14*.parquet'
 """).show()
 ```
 
