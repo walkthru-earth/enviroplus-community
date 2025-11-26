@@ -155,6 +155,28 @@ def check_serial_enabled():
     return any(Path(dev).exists() for dev in serial_devices)
 
 
+def get_real_user():
+    """Get the real user who invoked sudo (not root)"""
+    # Check SUDO_USER first (set when using sudo)
+    sudo_user = os.environ.get("SUDO_USER")
+    if sudo_user:
+        return sudo_user
+    # Fallback to current user
+    return os.environ.get("USER", "root")
+
+
+def check_user_in_dialout():
+    """Check if the real user is in the dialout group"""
+    user = get_real_user()
+    if user == "root":
+        return True  # root has access to everything
+
+    result = run_command(f"groups {user}", capture=True)
+    if result.returncode == 0:
+        return "dialout" in result.stdout
+    return False
+
+
 def check_config_overlay(overlay):
     """
     Check if a device tree overlay is configured in config.txt
@@ -251,6 +273,16 @@ class SystemChecker:
         else:
             error("Serial/UART: Not enabled")
 
+        # Check dialout group membership (for PMS5003 serial access)
+        dialout_ok = check_user_in_dialout()
+        self.results["dialout"] = dialout_ok
+        user = get_real_user()
+
+        if dialout_ok:
+            success(f"Dialout group: {user} is a member")
+        else:
+            error(f"Dialout group: {user} is NOT a member (required for PMS5003)")
+
         print(f"\n{Colors.BOLD}Device Tree Overlays:{Colors.RESET}")
 
         # Check overlays
@@ -270,7 +302,7 @@ class SystemChecker:
         # Summary
         print(f"\n{Colors.BOLD}{'=' * 60}{Colors.RESET}")
 
-        all_ok = all_packages_ok and i2c_ok and spi_ok and overlays_ok
+        all_ok = all_packages_ok and i2c_ok and spi_ok and serial_ok and dialout_ok and overlays_ok
 
         if all_ok:
             success("All requirements met! Your system is ready for Enviro+")
@@ -369,6 +401,18 @@ class SystemInstaller:
                 success("    Serial configured")
             else:
                 success("  → Serial already enabled")
+
+            # Add user to dialout group for serial access
+            user = get_real_user()
+            if user != "root" and not check_user_in_dialout():
+                info(f"  → Adding {user} to dialout group (for PMS5003 serial access)...")
+                result = run_command(f"usermod -a -G dialout {user}", capture=False)
+                if result.returncode == 0:
+                    success(f"    {user} added to dialout group")
+                else:
+                    error(f"    Failed to add {user} to dialout group")
+            else:
+                success(f"  → {user} already in dialout group")
 
             print()
 
