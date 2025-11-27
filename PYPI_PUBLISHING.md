@@ -46,7 +46,7 @@ Trusted Publishing uses **OpenID Connect (OIDC)** to securely publish packages t
 3. Fill in the form:
    - **PyPI Project Name**: `enviroplus-community`
    - **Owner**: `walkthru-earth` (your GitHub organization)
-   - **Repository name**: `enviroplus-python`
+   - **Repository name**: `enviroplus-community`
    - **Workflow name**: `publish.yml`
    - **Environment name**: `pypi`
 4. Click **"Add"**
@@ -64,7 +64,7 @@ Trusted Publishing uses **OpenID Connect (OIDC)** to securely publish packages t
 
 ### Step 4: Configure GitHub Environments
 
-1. Go to your GitHub repository: https://github.com/walkthru-earth/enviroplus-python
+1. Go to your GitHub repository: https://github.com/walkthru-earth/enviroplus-community
 2. Click **Settings** → **Environments**
 3. Create two environments:
 
@@ -338,4 +338,4 @@ uv pip list --outdated
 **Last Updated**: November 2025
 **Maintained by**: walkthru.earth
 **Package**: enviroplus-community
-**Repository**: https://github.com/walkthru-earth/enviroplus-python
+**Repository**: https://github.com/walkthru-earth/enviroplus-community

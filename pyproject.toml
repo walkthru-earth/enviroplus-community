@@ -64,11 +64,11 @@ examples = [
 ]
 
 [project.urls]
-GitHub = "https://github.com/walkthru-earth/enviroplus-python"
+Repository = "https://github.com/walkthru-earth/enviroplus-community"
 Homepage = "https://opensensor.space"
-Documentation = "https://github.com/walkthru-earth/enviroplus-python"
-"Bug Tracker" = "https://github.com/walkthru-earth/enviroplus-python/issues"
-"Source Code" = "https://github.com/walkthru-earth/enviroplus-python"
+Documentation = "https://github.com/walkthru-earth/enviroplus-community"
+"Bug Tracker" = "https://github.com/walkthru-earth/enviroplus-community/issues"
+"Source Code" = "https://github.com/walkthru-earth/enviroplus-community"
 
 [project.scripts]
 # Console scripts for easy access after pip install
